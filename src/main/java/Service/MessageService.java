@@ -4,6 +4,7 @@ import DAO.AccountDAO;
 import DAO.MessageDAO;
 import Model.Account;
 import Model.Message;
+import java.util.List;
 
 public class MessageService {
     private MessageDAO messageDAO;
@@ -34,5 +35,9 @@ public class MessageService {
 
         // If all validations pass, insert message into DB
         return messageDAO.insertMessage(message);
+    }
+
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
     }
 }

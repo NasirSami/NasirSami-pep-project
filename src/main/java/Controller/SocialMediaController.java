@@ -8,6 +8,7 @@ import DAO.AccountDAO;
 import DAO.MessageDAO;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import java.util.List;
 
 public class SocialMediaController {
     private AccountService accountService;
@@ -29,8 +30,9 @@ public class SocialMediaController {
         // Login Endpoint
         app.post("/login", this::handleLogin);
 
-        // Message Endpoint
+        // Message Endpoints
         app.post("/messages", this::handleCreateMessage);
+        app.get("/messages", this::handleGetAllMessages);
 
         return app;
     }
@@ -77,4 +79,8 @@ public class SocialMediaController {
         }
     }
     
+    private void handleGetAllMessages(Context ctx) {
+        List<Message> allMessages = messageService.getAllMessages();
+        ctx.json(allMessages);
+    }
 }
