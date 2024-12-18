@@ -1,33 +1,40 @@
 package Controller;
 
+import Model.Account;
+import Service.AccountService;
+import DAO.AccountDAO;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-/**
- * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
- * found in readme.md as well as the test cases. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
- */
 public class SocialMediaController {
-    /**
-     * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
-     * suite must receive a Javalin object from this method.
-     * @return a Javalin app object which defines the behavior of the Javalin controller.
-     */
+    private AccountService accountService;
+
     public Javalin startAPI() {
+        // Instantiate DAOs and Services
+        AccountDAO accountDAO = new AccountDAO();
+        accountService = new AccountService(accountDAO);
+
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
+
+        // User Registration Endpoint
+        app.post("/register", this::handleRegister);
 
         return app;
     }
 
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
+    private void handleRegister(Context ctx) {
+        // Parse the incoming JSON into an Account object
+        Account account = ctx.bodyAsClass(Account.class);
+
+        // Attempt registration via the service
+        Account created = accountService.register(account);
+
+        if (created != null) {
+            // Registration successful
+            ctx.json(created);
+        } else {
+            // Registration failed
+            ctx.status(400);
+        }
     }
-
-
 }
