@@ -1,18 +1,25 @@
 package Controller;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import DAO.AccountDAO;
+import DAO.MessageDAO;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 public class SocialMediaController {
     private AccountService accountService;
+    private MessageService messageService;
 
     public Javalin startAPI() {
         // Instantiate DAOs and Services
         AccountDAO accountDAO = new AccountDAO();
+        MessageDAO messageDAO = new MessageDAO();
+
         accountService = new AccountService(accountDAO);
+        messageService = new MessageService(messageDAO, accountDAO);
 
         Javalin app = Javalin.create();
 
@@ -21,6 +28,9 @@ public class SocialMediaController {
 
         // Login Endpoint
         app.post("/login", this::handleLogin);
+
+        // Message Endpoint
+        app.post("/messages", this::handleCreateMessage);
 
         return app;
     }
@@ -50,10 +60,20 @@ public class SocialMediaController {
     
         if (loggedInAccount != null) {
             // Login successful
-            ctx.json(loggedInAccount); // Will return 200 OK by default
+            ctx.json(loggedInAccount); 
         } else {
             // Login failed
             ctx.status(401);
+        }
+    }
+
+    private void handleCreateMessage(Context ctx) {
+        Message message = ctx.bodyAsClass(Message.class);
+        Message createdMessage = messageService.createMessage(message);
+        if (createdMessage != null) {
+            ctx.json(createdMessage);
+        } else {
+            ctx.status(400);
         }
     }
     
