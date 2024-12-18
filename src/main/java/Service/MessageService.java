@@ -61,5 +61,27 @@ public class MessageService {
         }
     }
     
+    public Message updateMessageText(int message_id, String newText) {
+        // Validate newText
+        if(newText == null || newText.trim().isEmpty() || newText.length() > 255) {
+            return null;
+        }
+    
+        // Check if message exists
+        Message existingMessage = messageDAO.getMessageById(message_id);
+        if (existingMessage == null) {
+            // No message with this id
+            return null;
+        }
+    
+        // Attempt update
+        boolean updated = messageDAO.updateMessageText(message_id, newText);
+        if (updated) {
+            // Retrieve and return the updated message
+            return messageDAO.getMessageById(message_id);
+        } else {
+            return null;
+        }
+    }
     
 }

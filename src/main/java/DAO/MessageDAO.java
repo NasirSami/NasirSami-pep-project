@@ -94,6 +94,23 @@ public class MessageDAO {
         }
         return false;
     }
+
+    public boolean updateMessageText(int message_id, String newText) {
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newText);
+            ps.setInt(2, message_id);
+    
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     
 }
 
