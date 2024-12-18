@@ -34,7 +34,7 @@ public class SocialMediaController {
         app.post("/messages", this::handleCreateMessage);
         app.get("/messages", this::handleGetAllMessages);
         app.get("/messages/{message_id}", this::handleGetMessageById);
-
+        app.delete("/messages/{message_id}", this::handleDeleteMessageById);
 
         return app;
     }
@@ -97,5 +97,19 @@ public class SocialMediaController {
             ctx.result("");
         }
     }
+
+    private void handleDeleteMessageById(Context ctx) {
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+        Message deletedMessage = messageService.deleteMessageById(messageId);
+    
+        if (deletedMessage != null) {
+            // Message existed and now is deleted
+            ctx.json(deletedMessage);
+        } else {
+            // Message did not exist
+            ctx.result(""); 
+        }
+    }
+    
     
 }
