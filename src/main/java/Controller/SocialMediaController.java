@@ -33,6 +33,8 @@ public class SocialMediaController {
         // Message Endpoints
         app.post("/messages", this::handleCreateMessage);
         app.get("/messages", this::handleGetAllMessages);
+        app.get("/messages/{message_id}", this::handleGetMessageById);
+
 
         return app;
     }
@@ -83,4 +85,17 @@ public class SocialMediaController {
         List<Message> allMessages = messageService.getAllMessages();
         ctx.json(allMessages);
     }
+
+    private void handleGetMessageById(Context ctx) {
+        String messageIdStr = ctx.pathParam("message_id");
+        int messageId = Integer.parseInt(messageIdStr);
+    
+        Message message = messageService.getMessageById(messageId);
+        if (message != null) {
+            ctx.json(message);
+        } else {
+            ctx.result("");
+        }
+    }
+    
 }
