@@ -4,6 +4,8 @@ import DAO.AccountDAO;
 import DAO.MessageDAO;
 import Model.Account;
 import Model.Message;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageService {
@@ -83,5 +85,15 @@ public class MessageService {
             return null;
         }
     }
+
+    public List<Message> getAllMessagesFromUser(int account_id) {
+        Account user = accountDAO.getAccountById(account_id);
+        if (user == null) {
+            // If user doesn't exist, return empty list
+            return new ArrayList<>();
+        }
+        return messageDAO.getAllMessagesFromUser(account_id);
+    }
+    
     
 }
