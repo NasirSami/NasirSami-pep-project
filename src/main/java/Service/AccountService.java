@@ -31,4 +31,16 @@ public class AccountService {
         Account insertedAccount = accountDAO.insertAccount(account);
         return insertedAccount;
     }
+
+    public Account login(Account loginAttempt) {
+        if(loginAttempt.getUsername() == null || loginAttempt.getPassword() == null){
+            return null;
+        }
+        Account existingAccount = accountDAO.getAccountByUsername(loginAttempt.getUsername());
+        if(existingAccount != null && existingAccount.getPassword().equals(loginAttempt.getPassword())){
+            return existingAccount;
+        }
+        return null;
+    }
+    
 }

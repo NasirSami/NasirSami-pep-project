@@ -19,6 +19,9 @@ public class SocialMediaController {
         // User Registration Endpoint
         app.post("/register", this::handleRegister);
 
+        // Login Endpoint
+        app.post("/login", this::handleLogin);
+
         return app;
     }
 
@@ -37,4 +40,21 @@ public class SocialMediaController {
             ctx.status(400);
         }
     }
+
+    private void handleLogin(Context ctx) {
+        // Parse the incoming JSON into an Account object (without account_id)
+        Account loginAttempt = ctx.bodyAsClass(Account.class);
+    
+        // Attempt login via the service
+        Account loggedInAccount = accountService.login(loginAttempt);
+    
+        if (loggedInAccount != null) {
+            // Login successful
+            ctx.json(loggedInAccount); // Will return 200 OK by default
+        } else {
+            // Login failed
+            ctx.status(401);
+        }
+    }
+    
 }
